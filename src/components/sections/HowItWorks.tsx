@@ -7,10 +7,10 @@ export function HowItWorks() {
     <section id="como-funciona" className="relative py-24 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeader
-          eyebrow="Como funciona"
+          eyebrow="Método CELI"
           title="Do primeiro contato até os"
           highlight="primeiros pacientes"
-          description="Um processo simples, transparente e feito para o seu momento."
+          description="Um processo em 4 etapas — cada uma carrega uma letra do nosso nome."
         />
 
         <div className="relative mt-16">
@@ -21,11 +21,16 @@ export function HowItWorks() {
           <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {howItWorksSteps.map((step, index) => (
               <Reveal as="li" key={step.id} delay={index * 0.1} className="relative flex flex-col gap-4">
-                <span className="glass-strong relative z-10 flex size-12 items-center justify-center rounded-2xl text-sm font-semibold text-gradient-brand">
-                  {step.number}
+                <span className="glass-strong relative z-10 flex size-12 items-center justify-center rounded-2xl text-lg font-semibold text-gradient-brand">
+                  {step.letter ?? step.number}
                 </span>
                 <div>
-                  <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
+                  {step.keyword && (
+                    <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+                      {step.keyword}
+                    </p>
+                  )}
+                  <h3 className="mt-1 text-base font-semibold text-foreground">{step.title}</h3>
                   <p className="mt-1.5 text-sm text-muted">{step.description}</p>
                 </div>
               </Reveal>

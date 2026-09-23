@@ -53,19 +53,29 @@ export interface ProcessStep {
   number: string;
   title: string;
   description: string;
+  /** For a named-methodology layout (e.g. "Método CELI"): the single letter shown in the badge. */
+  letter?: string;
+  /** The word that letter stands for (e.g. "Conexão" for "C"). */
+  keyword?: string;
 }
 
 export interface BentoCard {
   id: string;
   colSpan: 1 | 2 | 3;
   rowSpan: 1 | 2;
-  variant: "metric" | "text" | "visual" | "toggle" | "chart" | "logo";
+  variant: "metric" | "text" | "visual" | "toggle" | "chart" | "logo" | "browser";
   title?: string;
   description?: string;
   metricValue?: string;
   metricLabel?: string;
   icon?: LucideIcon;
   isPlaceholder?: boolean;
+  /** For the "visual" variant: renders an embedded map for this query (e.g. "Belo Horizonte, MG") instead of the default ping animation. */
+  mapQuery?: string;
+  /** For the "metric" variant: shows a "ver comprovante" link opening this real screenshot in a lightbox. */
+  proofImage?: { src: string; width: number; height: number; alt: string };
+  /** Optional micro-CTA rendered inside the card — opens WhatsApp with a contextual message. */
+  cta?: { label: string; message: string; trackLocation: string };
 }
 
 export interface TestimonialItem {

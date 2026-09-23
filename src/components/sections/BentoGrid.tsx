@@ -1,4 +1,6 @@
+import { BentoCardLink } from "@/components/ui/BentoCardLink";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { ProofLightbox } from "@/components/ui/ProofLightbox";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { bentoCards } from "@/data/bento";
@@ -39,6 +41,17 @@ function BentoCardContent({ card }: { card: BentoCard }) {
         <div>
           <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
           <p className="mt-1 text-sm text-muted">{card.description}</p>
+          {card.proofImage && (
+            <div className="mt-3">
+              <ProofLightbox
+                src={card.proofImage.src}
+                alt={card.proofImage.alt}
+                width={card.proofImage.width}
+                height={card.proofImage.height}
+                triggerLabel="Ver comprovante"
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -58,16 +71,63 @@ function BentoCardContent({ card }: { card: BentoCard }) {
             </div>
           )}
         </div>
-        <svg viewBox="0 0 180 48" className="mt-4 h-12 w-full text-primary-400" aria-hidden="true">
-          <polyline
-            points="0,40 25,34 50,36 75,22 100,26 125,12 150,16 180,4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <div className="mt-4 flex items-end justify-between gap-4">
+          <div>
+            {card.metricValue && (
+              <p className="text-2xl font-semibold text-gradient-brand sm:text-3xl">
+                {card.metricValue}
+              </p>
+            )}
+            {card.metricLabel && (
+              <p className="mt-0.5 text-xs text-muted">{card.metricLabel}</p>
+            )}
+          </div>
+          {card.proofImage && (
+            <ProofLightbox
+              src={card.proofImage.src}
+              alt={card.proofImage.alt}
+              width={card.proofImage.width}
+              height={card.proofImage.height}
+              triggerLabel="Ver comprovante"
+              mode="thumbnail"
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (card.variant === "browser") {
+    return (
+      <div className="flex h-full flex-col justify-between">
+        {Icon && (
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-brand-soft text-accent">
+            <Icon className="size-4.5" aria-hidden="true" />
+          </div>
+        )}
+        <div className="my-2 flex-1 rounded-lg border border-border-strong bg-foreground/[0.03] p-2" aria-hidden="true">
+          <div className="flex items-center gap-1">
+            <span className="size-1.5 rounded-full bg-foreground/15" />
+            <span className="size-1.5 rounded-full bg-foreground/15" />
+            <span className="size-1.5 rounded-full bg-foreground/15" />
+          </div>
+          <div className="mt-1.5 space-y-1">
+            <div className="h-1.5 w-3/5 rounded-full bg-gradient-brand-soft" />
+            <div className="h-1 w-full rounded-full bg-foreground/10" />
+            <div className="h-1 w-4/5 rounded-full bg-foreground/10" />
+          </div>
+        </div>
+        <div>
+          <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
+          <p className="mt-1 text-sm text-muted">{card.description}</p>
+          {card.cta && (
+            <BentoCardLink
+              label={card.cta.label}
+              message={card.cta.message}
+              trackLocation={card.cta.trackLocation}
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -91,6 +151,13 @@ function BentoCardContent({ card }: { card: BentoCard }) {
         <div>
           <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
           <p className="mt-1 text-sm text-muted">{card.description}</p>
+          {card.cta && (
+            <BentoCardLink
+              label={card.cta.label}
+              message={card.cta.message}
+              trackLocation={card.cta.trackLocation}
+            />
+          )}
         </div>
       </div>
     );
@@ -106,11 +173,29 @@ function BentoCardContent({ card }: { card: BentoCard }) {
             </div>
           )}
         </div>
-        <div className="relative flex flex-1 items-center justify-center py-6" aria-hidden="true">
-          <span className="absolute size-16 animate-ping rounded-full bg-primary/20" />
-          <span className="absolute size-16 rounded-full bg-primary/10" />
-          <span className="size-3 rounded-full bg-gradient-brand" />
-        </div>
+
+        {card.mapQuery ? (
+          <div className="relative my-4 min-h-[140px] flex-1 overflow-hidden rounded-xl border border-border-strong">
+            <iframe
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(card.mapQuery)}&z=9&output=embed`}
+              className="h-full w-full contrast-[0.85] saturate-[0.7] brightness-[0.85]"
+              style={{ border: 0 }}
+              loading="lazy"
+              title={`Mapa da região de atuação: ${card.mapQuery}`}
+            />
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-primary/10"
+              aria-hidden="true"
+            />
+          </div>
+        ) : (
+          <div className="relative flex flex-1 items-center justify-center py-6" aria-hidden="true">
+            <span className="absolute size-16 animate-ping rounded-full bg-primary/20" />
+            <span className="absolute size-16 rounded-full bg-primary/10" />
+            <span className="size-3 rounded-full bg-gradient-brand" />
+          </div>
+        )}
+
         <div>
           <h3 className="text-base font-semibold text-foreground">{card.title}</h3>
           <p className="mt-1 text-sm text-muted">{card.description}</p>
@@ -145,7 +230,7 @@ export function BentoGrid() {
           description="Estrutura, tecnologia e estratégia reunidas em um só lugar."
         />
 
-        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:[grid-auto-flow:dense] sm:auto-rows-[13rem]">
+        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:[grid-auto-flow:dense] sm:auto-rows-[14rem]">
           {bentoCards.map((card, index) => (
             <Reveal
               key={card.id}

@@ -4,8 +4,10 @@ import { cn } from "@/lib/utils";
 
 interface MetricCardProps {
   label: string;
-  value: string;
+  /** Omit together with isPlaceholder — renders a decorative skeleton bar instead of a real value. */
+  value?: string;
   icon?: LucideIcon;
+  /** Purely decorative UI chrome (no real number to show) — renders a skeleton bar instead of `value`. */
   isPlaceholder?: boolean;
   className?: string;
 }
@@ -25,14 +27,13 @@ export function MetricCard({
         </div>
       )}
       <div className="min-w-0">
-        <p className="truncate text-lg font-semibold text-foreground">{value}</p>
-        <p className="truncate text-xs text-muted">{label}</p>
+        {isPlaceholder ? (
+          <div className="h-4 w-14 rounded-full bg-gradient-brand-soft" aria-hidden="true" />
+        ) : (
+          <p className="truncate text-lg font-semibold text-foreground">{value}</p>
+        )}
+        <p className="mt-1.5 truncate text-xs text-muted">{label}</p>
       </div>
-      {isPlaceholder && (
-        <span className="absolute -top-2 -right-2 rounded-full border border-border-strong bg-background px-2 py-0.5 text-[10px] font-medium tracking-wide text-muted">
-          exemplo
-        </span>
-      )}
     </GlassCard>
   );
 }

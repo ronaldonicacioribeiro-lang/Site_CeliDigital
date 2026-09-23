@@ -1,4 +1,5 @@
 import { LayoutTemplate, Search, MapPin, ToggleRight, TrendingUp } from "lucide-react";
+import { siteConfig } from "@/config/site";
 import type { BentoCard } from "@/types";
 
 /**
@@ -13,10 +14,15 @@ export const bentoCards: BentoCard[] = [
     id: "site-profissional",
     colSpan: 1,
     rowSpan: 1,
-    variant: "text",
+    variant: "browser",
     icon: LayoutTemplate,
     title: "Site profissional",
     description: "Design responsivo e com identidade própria para o seu consultório.",
+    cta: {
+      label: "Quero um site assim",
+      message: "Olá! Vi o site da CeliDigital e quero um site assim para o meu consultório.",
+      trackLocation: "bento_site",
+    },
   },
   {
     id: "presenca-google",
@@ -34,18 +40,28 @@ export const bentoCards: BentoCard[] = [
     variant: "visual",
     icon: MapPin,
     title: "Alcance na sua região",
-    description: "Campanhas segmentadas para pacientes perto do seu consultório.",
+    description:
+      "Campanhas segmentadas pra quem atende presencial, ou alcance nacional pra quem atende só online.",
+    mapQuery: siteConfig.location
+      ? `${siteConfig.location.city}, ${siteConfig.location.state}`
+      : undefined,
   },
   {
-    id: "confianca-conversao",
+    id: "resultado-real",
     colSpan: 2,
     rowSpan: 1,
     variant: "metric",
-    metricValue: "88%",
-    metricLabel: "Resultado demonstrativo de conversão",
-    title: "Confiança que converte",
-    description: "Um site profissional muda a forma como o paciente decide agendar.",
-    isPlaceholder: true,
+    metricValue: "149",
+    metricLabel: "conversões em uma campanha real",
+    title: "Resultado real de campanha",
+    description:
+      "Custo médio de R$ 5,00 por conversão — números de uma campanha de tráfego pago gerenciada pela CeliDigital.",
+    proofImage: {
+      src: "/images/proof/campanha-real-google-ads.png",
+      width: 1279,
+      height: 619,
+      alt: "Print real do painel do Google Ads mostrando 149 conversões e R$ 5,00 de custo médio por conversão",
+    },
   },
   {
     id: "ativar-trafego",
@@ -55,17 +71,27 @@ export const bentoCards: BentoCard[] = [
     icon: ToggleRight,
     title: "Tráfego ativado",
     description: "Estrutura pronta para transformar cliques em agendamentos.",
+    cta: {
+      label: "Ativar tráfego pago",
+      message: "Olá! Quero ativar tráfego pago para o meu consultório.",
+      trackLocation: "bento_trafego",
+    },
   },
   {
-    id: "crescimento-organico",
+    id: "alcance-campanha",
     colSpan: 2,
     rowSpan: 1,
     variant: "chart",
     icon: TrendingUp,
-    metricValue: "Dado de exemplo",
-    metricLabel: "Crescimento de audiência",
-    title: "Crescimento orgânico",
-    description: "Ilustração de como sua presença digital pode evoluir com o tempo.",
-    isPlaceholder: true,
+    metricValue: "5,19 mil",
+    metricLabel: "impressões em uma campanha real",
+    title: "Alcance da campanha",
+    description: "R$ 2,73 de CPC médio no mesmo período — números reais, não projeção.",
+    proofImage: {
+      src: "/images/proof/campanha-real-google-ads.png",
+      width: 1279,
+      height: 619,
+      alt: "Print real do painel do Google Ads mostrando 5,19 mil impressões e R$ 2,73 de CPC médio",
+    },
   },
 ];

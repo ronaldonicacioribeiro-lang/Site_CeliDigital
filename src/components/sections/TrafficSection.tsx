@@ -7,6 +7,7 @@ const pillars = ["Site", "Estratégia", "Google", "Captação", "Acompanhamento"
 
 const checklist = [
   "Campanhas segmentadas para quem já busca por terapia",
+  "Segmentação por região pra quem atende presencial, ou alcance nacional pra quem atende só online",
   "Página de destino pensada para conversão",
   "Acompanhamento e otimização contínua dos anúncios",
   "Relatórios simples, sem jargão técnico",

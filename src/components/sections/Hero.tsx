@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { Search, Sparkles, Users } from "lucide-react";
+import { Search, Sparkle, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Float } from "@/components/ui/Float";
@@ -47,7 +47,7 @@ export function Hero() {
 
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
-    "Olá! Quero saber mais sobre site + tráfego pago para psicólogos."
+    "Olá! Quero descobrir como aumentar minha visibilidade e atrair mais oportunidades pelo digital."
   );
 
   const fadeUp = (delay: number) => ({
@@ -101,24 +101,25 @@ export function Hero() {
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="flex max-w-xl flex-col items-start gap-6">
             <motion.div {...fadeUp(0)}>
-              <Badge>Especialistas em marketing digital para psicólogos</Badge>
+              <Badge>Marketing digital especializado para psicólogos</Badge>
             </motion.div>
 
             <motion.h1
               {...fadeUp(0.1)}
               className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem]"
             >
-              Mais pacientes para o seu consultório com um site profissional e{" "}
-              <span className="text-gradient-brand">tráfego pago</span>.
+              Seu{" "}
+              <span className="text-gradient-brand">próximo nível profissional</span>{" "}
+              pode começar no digital.
             </motion.h1>
 
             <motion.p
               {...fadeUp(0.2)}
               className="max-w-lg text-balance text-base text-muted sm:text-lg"
             >
-              Criamos sites profissionais e páginas estratégicas, e estruturamos
-              campanhas de tráfego pago para gerar mais contatos qualificados
-              para o seu consultório.
+              Estratégias digitais para psicólogos que querem aumentar sua
+              visibilidade, atrair novas oportunidades e transformar sua
+              presença online em crescimento.
             </motion.p>
 
             <motion.div {...fadeUp(0.3)} className="flex flex-col gap-3 sm:flex-row">
@@ -128,12 +129,17 @@ export function Hero() {
                 size="lg"
                 onClick={() => trackWhatsappClick("hero")}
               >
-                Quero meu site + tráfego
+                Quero descobrir como
               </CTAButton>
               <CTAButton href="#como-funciona" variant="secondary" size="lg" icon={false}>
                 Ver como funciona
               </CTAButton>
             </motion.div>
+
+            <motion.p {...fadeUp(0.35)} className="max-w-md text-sm text-muted/70">
+              Site, Google Ads e estratégias pensadas para profissionais da
+              psicologia.
+            </motion.p>
 
             {shouldPin && (
               <motion.p
@@ -159,8 +165,8 @@ export function Hero() {
             className="absolute top-32 right-8 lg:right-16"
           >
             <div className="glass-strong flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-foreground">
-              <Sparkles className="size-3.5 text-accent" aria-hidden="true" />
-              Site + Tráfego Pago
+              <Sparkle className="size-3.5 text-accent" aria-hidden="true" />
+              Estratégia digital para psicólogos
             </div>
           </Float>
 
@@ -170,7 +176,7 @@ export function Hero() {
             delay={0.4}
             className="absolute bottom-32 right-8 w-44 lg:right-20 lg:w-48"
           >
-            <MetricCard label="Novos contatos" value="Exemplo" icon={Users} isPlaceholder />
+            <MetricCard label="Novos contatos" icon={Users} isPlaceholder />
           </Float>
 
           <Float
