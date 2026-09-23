@@ -12,11 +12,14 @@ function encodeFormData(data: Record<string, string>) {
 }
 
 /**
- * Netlify Forms — detected automatically at deploy time from the static HTML
- * (needs the plain `data-netlify` form + a matching hidden `form-name` input;
- * see https://docs.netlify.com/forms/setup). Submitted here via fetch so the
- * page doesn't reload; email notifications are configured in the Netlify
- * dashboard (Site settings → Forms → Form notifications), not in code.
+ * Netlify Forms + Next.js 13.5+ (the Netlify Next.js Runtime v5 / OpenNext
+ * adapter) can't detect forms from React-rendered pages anymore — only
+ * static HTML in `public/` is scanned at deploy time. `data-netlify` on
+ * THIS form has no effect and even fails the build (Netlify's plugin treats
+ * it as a sign of an unmigrated form). The real form schema lives in the
+ * static `public/__forms.html` twin; this one just needs matching field
+ * `name`s and posts to that static file's path.
+ * See https://opennext.js.org/netlify/forms
  */
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -32,7 +35,7 @@ export function ContactForm() {
 
     setStatus("submitting");
     try {
-      const response = await fetch("/", {
+      const response = await fetch("/__forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encodeFormData(payload),
@@ -58,8 +61,6 @@ export function ContactForm() {
     <form
       name="contato"
       method="POST"
-      data-netlify="true"
-      data-netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
       className="flex w-full max-w-md flex-col gap-3"
     >
