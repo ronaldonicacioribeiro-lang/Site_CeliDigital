@@ -11,7 +11,7 @@ import { trackWhatsappClick } from "@/lib/analytics";
 export function CTASection() {
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
-    "Olá! Quero saber mais sobre site + tráfego pago para psicólogos."
+    "Olá! Quero agendar uma avaliação gratuita sobre site + tráfego pago para o meu consultório."
   );
 
   return (
@@ -40,7 +40,7 @@ export function CTASection() {
                 size="lg"
                 onClick={() => trackWhatsappClick("cta_section")}
               >
-                Quero meu site + tráfego
+                Agendar avaliação gratuita
               </CTAButton>
 
               <div className="flex w-full max-w-md items-center gap-3 text-xs text-muted/60">
