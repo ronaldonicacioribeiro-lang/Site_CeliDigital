@@ -2,6 +2,7 @@
 
 import { GlassCard } from "@/components/ui/GlassCard";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { ContactForm } from "@/components/ui/ContactForm";
 import { Reveal } from "@/components/ui/Reveal";
 import { siteConfig } from "@/config/site";
 import { buildWhatsappLink } from "@/lib/utils";
@@ -41,6 +42,14 @@ export function CTASection() {
               >
                 Quero meu site + tráfego
               </CTAButton>
+
+              <div className="flex w-full max-w-md items-center gap-3 text-xs text-muted/60">
+                <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                ou deixe seu contato
+                <span className="h-px flex-1 bg-border" aria-hidden="true" />
+              </div>
+
+              <ContactForm />
             </div>
           </GlassCard>
         </Reveal>

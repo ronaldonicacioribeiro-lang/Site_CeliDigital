@@ -9,3 +9,8 @@ import { sendGTMEvent } from "@next/third-parties/google";
 export function trackWhatsappClick(location: string) {
   sendGTMEvent({ event: "whatsapp_click", cta_location: location });
 }
+
+/** Fires when the Netlify contact form (phone/WhatsApp) is submitted successfully. */
+export function trackContactFormSubmit() {
+  sendGTMEvent({ event: "contact_form_submit" });
+}
