@@ -84,7 +84,15 @@ export function Footer() {
           <p>
             © {year} {siteConfig.brandName}. Todos os direitos reservados.
           </p>
-          <p>{siteConfig.tagline}</p>
+          <div className="flex items-center gap-4">
+            <a
+              href="/politica-de-privacidade"
+              className="transition-colors hover:text-foreground"
+            >
+              Política de Privacidade
+            </a>
+            <p>{siteConfig.tagline}</p>
+          </div>
         </div>
       </div>
     </footer>

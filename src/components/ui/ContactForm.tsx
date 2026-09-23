@@ -103,7 +103,11 @@ export function ContactForm() {
       )}
 
       <p className="text-center text-[11px] text-muted/70">
-        Seus dados são usados só pra entrarmos em contato — nada de spam.
+        Seus dados são usados só pra entrarmos em contato — nada de spam.{" "}
+        <a href="/politica-de-privacidade" className="underline underline-offset-2 hover:text-foreground">
+          Política de Privacidade
+        </a>
+        .
       </p>
     </form>
   );
