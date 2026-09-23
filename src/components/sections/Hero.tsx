@@ -46,7 +46,7 @@ export function Hero() {
 
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
-    "Olá! Quero descobrir como aumentar minha visibilidade e atrair mais oportunidades pelo digital."
+    siteConfig.contact.whatsappDefaultMessage
   );
 
   const fadeUp = (delay: number) => ({

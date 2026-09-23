@@ -19,6 +19,8 @@ export const siteConfig: SiteConfig = {
   contact: {
     whatsapp: "5531998806237",
     whatsappDisplay: "(31) 99880-6237",
+    whatsappDefaultMessage:
+      "Olá! Vim através do seu site e gostaria de conhecer melhor o seu trabalho.",
     email: "suportecelidigital@gmail.com",
     // Sem Instagram ainda — não adicionar link até existir um perfil real.
   },

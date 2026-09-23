@@ -12,6 +12,8 @@ export interface SiteConfig {
   contact: {
     whatsapp: string;
     whatsappDisplay: string;
+    /** Pre-filled text for every WhatsApp CTA on the site — keep it one consistent opener. */
+    whatsappDefaultMessage: string;
     email: string;
     /** Omit both until there's a real profile — don't link to one that doesn't exist. */
     instagram?: string;

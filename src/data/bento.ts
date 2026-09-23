@@ -20,7 +20,7 @@ export const bentoCards: BentoCard[] = [
     description: "Design responsivo e com identidade própria para o seu consultório.",
     cta: {
       label: "Quero um site assim",
-      message: "Olá! Vi o site da CeliDigital e quero um site assim para o meu consultório.",
+      message: siteConfig.contact.whatsappDefaultMessage,
       trackLocation: "bento_site",
     },
   },
@@ -73,7 +73,7 @@ export const bentoCards: BentoCard[] = [
     description: "Estrutura pronta para transformar cliques em agendamentos.",
     cta: {
       label: "Ativar tráfego pago",
-      message: "Olá! Quero ativar tráfego pago para o meu consultório.",
+      message: siteConfig.contact.whatsappDefaultMessage,
       trackLocation: "bento_trafego",
     },
   },

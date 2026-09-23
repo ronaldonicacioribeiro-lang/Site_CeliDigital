@@ -11,7 +11,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
-    "Olá! Quero saber mais sobre site + tráfego pago para psicólogos."
+    siteConfig.contact.whatsappDefaultMessage
   );
 
   return (

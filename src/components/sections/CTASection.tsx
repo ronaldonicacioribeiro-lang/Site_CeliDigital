@@ -11,7 +11,7 @@ import { trackWhatsappClick } from "@/lib/analytics";
 export function CTASection() {
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
-    "Olá! Quero agendar uma avaliação gratuita sobre site + tráfego pago para o meu consultório."
+    siteConfig.contact.whatsappDefaultMessage
   );
 
   return (
