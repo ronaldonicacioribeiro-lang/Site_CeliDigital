@@ -62,13 +62,14 @@ export function ScrollFrameSequence({
   const staticIndex = Math.floor(frameCount / 2);
 
   // Ref reads belong in effects, not render — recompute readiness here
-  // whenever a new frame finishes loading or the scrubbing mode flips.
+  // whenever a new frame finishes loading. Paint as soon as ANY frame is
+  // available (not the whole sequence) — waiting for all 50 frames before
+  // the first paint is what was pushing LCP past 10s on slow connections.
+  // drawFrame() already no-ops for a frame that isn't loaded yet, so this
+  // just lets the canvas show whatever's ready and catch up as more arrive.
   useEffect(() => {
-    const ready = isScrubbing
-      ? loadedRef.current.size === frameCount
-      : loadedRef.current.has(staticIndex);
-    setIsReady(ready);
-  }, [isScrubbing, frameCount, staticIndex, loadTick]);
+    setIsReady(loadedRef.current.size > 0);
+  }, [loadTick]);
 
   function drawFrame(index: number) {
     currentIndexRef.current = index;
@@ -110,12 +111,18 @@ export function ScrollFrameSequence({
   }
 
   // Only fetch what's actually needed: the whole sequence when scrubbing,
-  // otherwise just the one static frame that will ever be shown.
+  // otherwise just the one static frame that will ever be shown. The frame
+  // matching the current scroll position is requested first and flagged
+  // high-priority so it wins the race against the other 49 concurrent
+  // requests — that's the one the canvas actually needs to paint LCP.
   useEffect(() => {
-    function ensureLoaded(index: number) {
+    function ensureLoaded(index: number, priority: boolean) {
       if (imagesRef.current[index]) return;
       const img = new Image();
       img.decoding = "async";
+      if (priority && "fetchPriority" in img) {
+        (img as HTMLImageElement & { fetchPriority: string }).fetchPriority = "high";
+      }
       img.onload = () => {
         loadedRef.current.add(index);
         setLoadTick((tick) => tick + 1);
@@ -125,10 +132,18 @@ export function ScrollFrameSequence({
     }
 
     if (isScrubbing) {
-      for (let i = 0; i < frameCount; i++) ensureLoaded(i);
+      const priorityIndex = Math.min(
+        frameCount - 1,
+        Math.max(0, Math.round(progress.get() * (frameCount - 1)))
+      );
+      ensureLoaded(priorityIndex, true);
+      for (let i = 0; i < frameCount; i++) {
+        if (i !== priorityIndex) ensureLoaded(i, false);
+      }
     } else {
-      ensureLoaded(staticIndex);
+      ensureLoaded(staticIndex, true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScrubbing, framesBasePath, frameCount, staticIndex]);
 
   // Keep the canvas backing buffer matched to its displayed size × DPR.

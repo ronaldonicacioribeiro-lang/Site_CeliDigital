@@ -1,5 +1,6 @@
 import { BentoCardLink } from "@/components/ui/BentoCardLink";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { MapEmbed } from "@/components/ui/MapEmbed";
 import { ProofLightbox } from "@/components/ui/ProofLightbox";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -176,11 +177,8 @@ function BentoCardContent({ card }: { card: BentoCard }) {
 
         {card.mapQuery ? (
           <div className="relative my-4 min-h-[140px] flex-1 overflow-hidden rounded-xl border border-border-strong">
-            <iframe
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(card.mapQuery)}&z=9&output=embed`}
-              className="h-full w-full contrast-[0.85] saturate-[0.7] brightness-[0.85]"
-              style={{ border: 0 }}
-              loading="lazy"
+            <MapEmbed
+              query={card.mapQuery}
               title={`Mapa da região de atuação: ${card.mapQuery}`}
             />
             <div

@@ -2,11 +2,10 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { Search, Sparkle, Users } from "lucide-react";
+import { Sparkle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Float } from "@/components/ui/Float";
-import { MetricCard } from "@/components/ui/MetricCard";
 import { MouseParallax } from "@/components/ui/MouseParallax";
 import { ScrollFrameSequence } from "@/components/ui/ScrollFrameSequence";
 import { siteConfig } from "@/config/site";
@@ -152,9 +151,10 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Floating chips over the more visible (right) side of the image.
+        {/* Floating chip over the more visible (right) side of the image.
             Confined to the right portion of the hero (not inset-0) so this
-            layer never sits on top of the text/CTAs on the left. */}
+            layer never sits on top of the text/CTAs on the left. A real
+            WhatsApp CTA, not just decoration. */}
         <MouseParallax
           strength={8}
           className="absolute inset-y-0 right-0 hidden w-full sm:block lg:w-1/2"
@@ -164,30 +164,19 @@ export function Hero() {
             duration={4.5}
             className="absolute top-32 right-8 lg:right-16"
           >
-            <div className="glass-strong flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-foreground">
+            <motion.a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsappClick("hero_chip")}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="glass-strong flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-foreground transition-colors hover:bg-surface-elevated"
+            >
               <Sparkle className="size-3.5 text-accent" aria-hidden="true" />
               Estratégia digital para psicólogos
-            </div>
-          </Float>
-
-          <Float
-            distance={14}
-            duration={5.5}
-            delay={0.4}
-            className="absolute bottom-32 right-8 w-44 lg:right-20 lg:w-48"
-          >
-            <MetricCard label="Novos contatos" icon={Users} isPlaceholder />
-          </Float>
-
-          <Float
-            distance={9}
-            duration={4.8}
-            delay={0.2}
-            className="absolute top-1/2 right-6 hidden -translate-y-1/2 lg:right-10 lg:block"
-          >
-            <div className="glass-strong flex size-12 items-center justify-center rounded-2xl text-accent">
-              <Search className="size-5" aria-hidden="true" />
-            </div>
+            </motion.a>
           </Float>
         </MouseParallax>
       </div>

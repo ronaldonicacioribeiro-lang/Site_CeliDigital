@@ -54,6 +54,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* The region map (Bento Grid) embeds Google Maps — warm up its
+            connections so the request doesn't pay full DNS+TLS setup cost. */}
+        <link rel="preconnect" href="https://maps.googleapis.com" />
+        <link rel="preconnect" href="https://maps.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full bg-background font-sans text-foreground">
         {children}
       </body>
