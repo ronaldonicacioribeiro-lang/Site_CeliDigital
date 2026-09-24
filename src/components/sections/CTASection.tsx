@@ -20,7 +20,7 @@ export function CTASection() {
         <Reveal>
           <GlassCard strong glow className="relative overflow-hidden px-6 py-16 text-center sm:px-16">
             <div
-              className="pointer-events-none absolute -top-24 left-1/2 size-96 -translate-x-1/2 rounded-full bg-primary/25 blur-[120px]"
+              className="pointer-events-none glow-orb-primary-strong absolute -top-24 left-1/2 size-96 -translate-x-1/2 rounded-full"
               aria-hidden="true"
             />
             <div className="relative flex flex-col items-center gap-6">

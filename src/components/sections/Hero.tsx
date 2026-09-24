@@ -18,7 +18,7 @@ const SEQUENCE_FRAME_COUNT = 50;
 const DESKTOP_SEQUENCE = { basePath: "/images/hero/brain-sequence", width: 3840, height: 2160 };
 const MOBILE_SEQUENCE = {
   basePath: "/images/hero/brain-sequence-mobile",
-  width: 1280,
+  width: 400,
   height: 720,
 };
 
@@ -93,8 +93,8 @@ export function Hero() {
 
         {/* Ambient brand glow, kept subtle on top of the image for continuity with the rest of the site */}
         <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-          <div className="absolute -top-40 left-1/4 size-[32rem] rounded-full bg-primary/15 blur-[140px]" />
-          <div className="absolute top-1/3 -right-20 size-[28rem] rounded-full bg-secondary/10 blur-[140px]" />
+          <div className="glow-orb-primary absolute -top-40 left-1/4 size-[32rem] rounded-full" />
+          <div className="glow-orb-secondary absolute top-1/3 -right-20 size-[28rem] rounded-full" />
         </div>
 
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">

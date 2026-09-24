@@ -21,6 +21,8 @@ interface ScrollFrameSequenceProps {
   fill?: boolean;
 }
 
+const MAX_PARALLEL_FRAME_LOADS = 4;
+
 function frameSrc(basePath: string, index: number) {
   return `${basePath}/frame-${String(index + 1).padStart(3, "0")}.webp`;
 }
@@ -74,7 +76,17 @@ export function ScrollFrameSequence({
   function drawFrame(index: number) {
     currentIndexRef.current = index;
     const canvas = canvasRef.current;
-    const img = imagesRef.current[index];
+    // Frames now arrive progressively; if the wanted one isn't here yet, show
+    // the closest one that is instead of leaving the previous image stuck.
+    let shown = index;
+    if (!loadedRef.current.has(shown)) {
+      shown = -1;
+      for (let d = 1; d < frameCount && shown === -1; d++) {
+        if (loadedRef.current.has(index - d)) shown = index - d;
+        else if (loadedRef.current.has(index + d)) shown = index + d;
+      }
+    }
+    const img = shown >= 0 ? imagesRef.current[shown] : null;
     if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -116,8 +128,13 @@ export function ScrollFrameSequence({
   // high-priority so it wins the race against the other 49 concurrent
   // requests — that's the one the canvas actually needs to paint LCP.
   useEffect(() => {
-    function ensureLoaded(index: number, priority: boolean) {
-      if (imagesRef.current[index]) return;
+    let cancelled = false;
+
+    function load(index: number, priority: boolean, onSettled?: () => void) {
+      if (imagesRef.current[index]) {
+        onSettled?.();
+        return;
+      }
       const img = new Image();
       img.decoding = "async";
       if (priority && "fetchPriority" in img) {
@@ -126,23 +143,46 @@ export function ScrollFrameSequence({
       img.onload = () => {
         loadedRef.current.add(index);
         setLoadTick((tick) => tick + 1);
+        onSettled?.();
       };
+      img.onerror = () => onSettled?.();
       img.src = frameSrc(framesBasePath, index);
       imagesRef.current[index] = img;
     }
 
-    if (isScrubbing) {
-      const priorityIndex = Math.min(
-        frameCount - 1,
-        Math.max(0, Math.round(progress.get() * (frameCount - 1)))
-      );
-      ensureLoaded(priorityIndex, true);
-      for (let i = 0; i < frameCount; i++) {
-        if (i !== priorityIndex) ensureLoaded(i, false);
-      }
-    } else {
-      ensureLoaded(staticIndex, true);
+    if (!isScrubbing) {
+      load(staticIndex, true);
+      return;
     }
+
+    // The frame for the current scroll position goes alone and first, so it
+    // gets the whole connection. The other frames then trickle in a few at a
+    // time, nearest-to-here first — requesting all of them at once made them
+    // fight fonts/JS for bandwidth and delayed the first paint on slow mobile.
+    const firstIndex = Math.min(
+      frameCount - 1,
+      Math.max(0, Math.round(progress.get() * (frameCount - 1)))
+    );
+    const remaining = Array.from({ length: frameCount }, (_, i) => i)
+      .filter((i) => i !== firstIndex)
+      .sort((a, b) => Math.abs(a - firstIndex) - Math.abs(b - firstIndex));
+    let active = 0;
+
+    function pump() {
+      while (!cancelled && active < MAX_PARALLEL_FRAME_LOADS && remaining.length > 0) {
+        const next = remaining.shift() as number;
+        active++;
+        load(next, false, () => {
+          active--;
+          pump();
+        });
+      }
+    }
+
+    load(firstIndex, true, pump);
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScrubbing, framesBasePath, frameCount, staticIndex]);
 
