@@ -28,9 +28,16 @@ export function Hero() {
     siteConfig.contact.whatsappDefaultMessage
   );
 
+  // Animates position only, never opacity: the headline here is almost always
+  // the LCP element, and Chrome doesn't count an opacity:0 element as
+  // "painted" for LCP purposes — an opacity fade-in makes LCP wait on
+  // JS hydration + this animation's delay/duration instead of just on the
+  // text actually rendering. A transform-only slide keeps the same visual
+  // feel (content is already opacity:1, just offset a few px) without that
+  // dependency.
   const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
-    animate: { opacity: 1, y: 0 },
+    initial: { y: prefersReducedMotion ? 0 : 24 },
+    animate: { y: 0 },
     transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
   });
 
