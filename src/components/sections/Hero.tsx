@@ -1,48 +1,27 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Sparkle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Float } from "@/components/ui/Float";
 import { MouseParallax } from "@/components/ui/MouseParallax";
-import { ScrollFrameSequence } from "@/components/ui/ScrollFrameSequence";
 import { siteConfig } from "@/config/site";
-import { buildWhatsappLink, cn } from "@/lib/utils";
-import { useMediaQuery } from "@/lib/hooks";
+import { buildWhatsappLink } from "@/lib/utils";
 import { trackWhatsappClick } from "@/lib/analytics";
 
-/** Frames live in public/images/hero/brain-sequence(-mobile) — see SKILL.md to swap this asset. */
-const SEQUENCE_FRAME_COUNT = 50;
-const DESKTOP_SEQUENCE = { basePath: "/images/hero/brain-sequence", width: 3840, height: 2160 };
-const MOBILE_SEQUENCE = {
-  basePath: "/images/hero/brain-sequence-mobile",
-  width: 400,
-  height: 720,
-};
+// Looping background video, replacing the old scroll-scrubbed 3D frame
+// sequence (ScrollFrameSequence, kept in ui/ for other clones of this
+// template). Two encodes so phones don't pay for 1280x720: mobile is a
+// narrower center-crop (matches how object-cover fills a portrait screen
+// anyway) downscaled to 480x540, desktop keeps the full 1280x720 frame at a
+// lower bitrate than the original source export.
+const HERO_VIDEO_MOBILE_SRC = "/videos/hero-loop-mobile.mp4";
+const HERO_VIDEO_DESKTOP_SRC = "/videos/hero-loop-desktop.mp4";
+const HERO_VIDEO_POSTER = "/images/hero/hero-loop-poster.jpg";
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
-  // Below `lg` the hero's content is taller than one viewport, so a pinned/sticky
-  // wrapper would trap part of it out of view — the pin + 3D tilt is desktop-only.
-  // The frame sequence itself still scrubs on mobile, just tied to the section's
-  // normal (non-pinned) scroll position instead of holding it in place.
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const shouldPin = isDesktop && !prefersReducedMotion;
-  const shouldScrub = !prefersReducedMotion;
-  const sequence = isDesktop ? DESKTOP_SEQUENCE : MOBILE_SEQUENCE;
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    // Pinned (desktop): progress spans the whole tall section while it's held in
-    // place. Not pinned (mobile): progress spans the section's natural transit
-    // through the viewport, so frames still advance as the page scrolls normally.
-    offset: shouldPin ? ["start start", "end end"] : ["start end", "end start"],
-  });
-  // Background is drawn oversized (scale-110 base) so the slight rotateY never reveals an edge.
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.16, 1.08]);
-  const bgRotateY = useTransform(scrollYProgress, [0, 0.4], [-6, 0]);
 
   const whatsappHref = buildWhatsappLink(
     siteConfig.contact.whatsapp,
@@ -56,34 +35,32 @@ export function Hero() {
   });
 
   return (
-    <section
-      id="inicio"
-      ref={sectionRef}
-      className="relative"
-      style={{ height: shouldPin ? "240vh" : "auto" }}
-    >
-      <div
-        className={cn(
-          "perspective-premium relative flex min-h-screen items-center overflow-hidden pt-28 pb-20 sm:pt-32",
-          shouldPin && "sticky top-0"
-        )}
-      >
-        {/* Full-bleed 3D illustration background, scroll-scrubbed on desktop */}
-        <motion.div
-          className="absolute inset-0 -z-30 scale-110"
-          style={shouldPin ? { scale: bgScale, rotateY: bgRotateY } : undefined}
-        >
-          <ScrollFrameSequence
-            progress={scrollYProgress}
-            enabled={shouldScrub}
-            fill
-            framesBasePath={sequence.basePath}
-            frameCount={SEQUENCE_FRAME_COUNT}
-            width={sequence.width}
-            height={sequence.height}
-            alt="Ilustração 3D de uma mente clara e organizada, animada conforme a rolagem da página"
-          />
-        </motion.div>
+    <section id="inicio" className="relative">
+      <div className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-20 sm:pt-32">
+        {/* Full-bleed looping background video (local test — see note above) */}
+        <div className="absolute inset-0 -z-30">
+          {prefersReducedMotion ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={HERO_VIDEO_POSTER}
+              alt="Ilustração de uma mente clara e organizada"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={HERO_VIDEO_POSTER}
+              className="h-full w-full object-cover"
+              aria-label="Ilustração animada de uma mente clara e organizada"
+            >
+              <source src={HERO_VIDEO_MOBILE_SRC} media="(max-width: 1023px)" type="video/mp4" />
+              <source src={HERO_VIDEO_DESKTOP_SRC} type="video/mp4" />
+            </video>
+          )}
+        </div>
 
         {/* Dark scrim — keeps the text legible and the hero inside the site's dark palette */}
         <div
@@ -139,15 +116,6 @@ export function Hero() {
               Site, Google Ads e estratégias pensadas para profissionais da
               psicologia.
             </motion.p>
-
-            {shouldPin && (
-              <motion.p
-                {...fadeUp(0.4)}
-                className="text-xs tracking-wide text-muted/70 uppercase"
-              >
-                Role para ver a experiência em 3D
-              </motion.p>
-            )}
           </div>
         </div>
 
